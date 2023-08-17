@@ -1,0 +1,12 @@
+movies.csv 파일이 메인 데이터프레임
+- links.csv, ratings.csv 는 정보를 추가하는 역할
+전처리 과정을 거친 최종 파일 movies_final.csv
+
+movies.csv
+: movieId, title, generes
+
+movies_final.csv
+: movieId, title, generes, url, poster_path, imdbId,
+    tmdbId, rating_count, rating_avg
+
+https://www.imdb.com/title/tt20216624/
