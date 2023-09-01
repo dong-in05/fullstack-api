@@ -1,8 +1,8 @@
 import pandas as pd
-import requests 
-import sys
+import requests
 from tqdm import tqdm
-import time
+import time 
+# 0d1228a6e3b2e2cbd8dd8c61420346c5
 
 def add_url(row):
     return f'https://www.imdb.com/title/tt{row}/'
@@ -15,29 +15,30 @@ def add_rating(df):
         ratings_avg = ('rating', 'mean')
     ).reset_index()
     
-    rating_added_df = df.merge(agg_df, on='movieId')
-    return rating_added_df
+    ratings_added_df = df.merge(agg_df, on='movieId')
+    return ratings_added_df
 
 def add_poster(df):
-    for i, row in tqdm(df.iterrows(), total=df.shape[0]): 
+    for i, row in tqdm(df.iterrows(), total=df.shape[0]):
         tmdb_id = row['tmdbId']
         tmdb_url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?api_key=0d1228a6e3b2e2cbd8dd8c61420346c5&language=en-US"
         result = requests.get(tmdb_url)
-        
+
         try:
-            df.at[i, "poster_path"] = "https://image.tmdb.org/t/p/original" + result.json()['poster_path']
+            df.at[i, "poster_path"] =  "https://image.tmdb.org/t/p/original" + result.json()['poster_path']
             time.sleep(0.1)
         except (TypeError, KeyError) as e:
-           df.at[i, "poster_path"] =  "https://image.tmdb.org/t/p/original/uXDfJbP4ijW5hWSBrPrlKpxab.jpg"
+            df.at[i, "poster_path"] =  "https://image.tmdb.org/t/p/original/uXDfJbP4ijW5hWSBrPrlKpxab.jpg"
     return df
-        
 if __name__ == "__main__":
-    movies_df = pd.read_csv('data/movies.csv')
-    movies_df['movieId'] = movies_df['movieId'].astype(str)
-    links_df = pd.read_csv('data/links.csv',dtype=str)
-    merged_df = movies_df.merge(links_df, on='movieId', how='left')
+    movies_df = pd.read_csv("data/movies.csv")
+    movies_df['movieId'] = movies_df["movieId"].astype(str)
+    
+    links_df = pd.read_csv('data/links.csv', dtype=str)
+    merged_df = movies_df.merge(links_df, on='movieId', how="left")
     merged_df['url'] = merged_df['imdbId'].apply(lambda x: add_url(x))
     result_df = add_rating(merged_df)
-    result_df["poster_path"] =  None
+    result_df["poster_path"] = None
     result_df = add_poster(result_df)
     result_df.to_csv("data/movies_final.csv", index=None)
+    # print(result_df)

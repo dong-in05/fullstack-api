@@ -14,3 +14,7 @@ https://www.imdb.com/title/tt20216624/
 b18e798ff377ef49f1c335283e7c43d6
 
 https://127.0.0.1:8000
+
+# 백엔드 API 엔드 포인트
+
+- https://mybackend.org => localhost:8000
